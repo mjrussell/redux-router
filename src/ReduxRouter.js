@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { RoutingContext as DefaultRoutingContext } from 'react-router';
+import { RouterContext as DefaultRoutingContext } from 'react-router';
+import { createRouterObject } from 'react-router/lib/RouterUtils';
 import routerStateEquals from './routerStateEquals';
 import { ROUTER_STATE_SELECTOR } from './constants';
 import { initRoutes, replaceRoutes } from './actionCreators';
@@ -34,6 +35,7 @@ class ReduxRouter extends Component {
   constructor(props, context) {
     super(props, context);
     context.store.dispatch(initRoutes(getRoutesFromProps(props)));
+    this.router = createRouterObject(context.store.history, context.store.transitionManager);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -73,6 +75,7 @@ class ReduxRouter extends Component {
       <ReduxRouterContext
         history={history}
         routerStateSelector={memoizeRouterStateSelector(routerStateSelector)}
+        router={this.router}
         {...this.props}
       />
     );
